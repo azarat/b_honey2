@@ -1,0 +1,10 @@
+body {
+  background: rgba(215, 152, 40, 0.15);
+}
+header {
+  padding: 10px 0px;
+  text-align: center;
+}
+img {
+  max-width: 100%;
+}
