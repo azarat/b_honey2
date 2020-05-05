@@ -57,13 +57,13 @@ module.exports = {
       //   ]
       // },
       {
-        test: /\.css$/,
+        test: /\.s?css$/,
         use: [
           'style-loader',
           miniCss.loader,
           {
             loader: 'css-loader',
-            options: { sourceMap: true }
+            options: { sourceMap: true, options: { importLoaders: 1 } }
           }, {
             loader: 'postcss-loader',
             options: { sourceMap: true, config: { path: 'postcss.config.js' } }
