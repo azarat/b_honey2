@@ -35,6 +35,9 @@ const useStyles = makeStyles((theme) => ({
   paper: {
     padding: theme.spacing(2),
   },
+  headerBg: {
+    background: '#d79828'
+  }
 }));
 
 const theme = createMuiTheme({
@@ -84,10 +87,11 @@ const Slider = props => {
   const [state, setState] = useState({
     activeIndex: 0,
     translate: 0,
-    transition: 0.45
+    transition: 0.45,
+    opacity: 1
   })
 
-  const { activeIndex, translate, transition } = state
+  const { activeIndex, translate, transition, opacity } = state
 
   const nextSlide = () => {
     if (activeIndex === props.slides.length - 1) {
@@ -121,7 +125,7 @@ const Slider = props => {
     })
   }
 
-
+  // -------------------------
   const handlerSliderNavByKey = useCallback(
     ({keyCode}) => {
 
@@ -137,11 +141,35 @@ const Slider = props => {
   );
 
   useEventListener('keydown', handlerSliderNavByKey)
+  // -------------------------
+
+  // -------------------------
+  const handlerScroll = useCallback(
+    (e) => {
+      var relativeOpacity;
+      var relativeScroll = window.innerHeight - window.scrollY;
+
+      if (relativeScroll >= 0) {
+        relativeOpacity = relativeScroll / window.innerHeight;
+      } else {
+        relativeOpacity = 0;
+      }
+
+      setState({
+        ...state,
+        opacity: relativeOpacity
+      })
+    },
+    [state]
+  );
+
+  useEventListener('scroll', handlerScroll)
+  // -------------------------
 
   return (
     <div className="slider">
       <SliderContainer
-        activeIndex={activeIndex}
+        opacity={opacity}
         translate={translate}
         transition={transition}
         width={getWidth() * props.slides.length}
@@ -179,11 +207,46 @@ function MainMenu() {
 function AppGrid() {
   const classes = useStyles();
 
+  const initialMargin = 100;
+  const [marginParallax, setMarginParallax] = useState(initialMargin);
+  const [opacityHeaderBg, setOpacityHeaderBg] = useState(0);
+
+  // -------------------------
+  const handlerMarginParallax = useCallback(
+    ({e}) => {
+
+      var relativeMargin;
+      var relativeScroll = window.innerHeight - window.scrollY;
+      var multiplier = 2;
+
+      if (relativeScroll > 0) {
+        relativeMargin = (1 - relativeScroll / window.innerHeight) * multiplier;
+      } else {
+        relativeMargin = multiplier;
+      }
+
+      if (relativeMargin >= 1) {
+        relativeMargin = 1;
+      }
+
+      setMarginParallax(initialMargin * (1 + relativeMargin));
+      setOpacityHeaderBg(relativeMargin);
+
+    },
+    [marginParallax, opacityHeaderBg]
+  );
+
+  useEventListener('scroll', handlerMarginParallax)
+  // -------------------------
+
   return (
     <ThemeProvider theme={theme}>
       <div className={classes.root}>
 
         <AppBar position="fixed" className="initial-scroll">
+          <div className={classes.headerBg} css={css`
+              opacity: ${opacityHeaderBg};
+            `}></div>
           <Toolbar>
             <Grid container direction="row" justify="center" alignItems="center">
               <Grid item className={classes.paper} xs={3}>
@@ -200,7 +263,10 @@ function AppGrid() {
 
         <Grid container component="main">
           <Grid item xs={9}>
-            <Paper elevation={3}>
+            <Paper className="section-main" elevation={3}
+              css={css`
+                margin-top: -${marginParallax}px;
+              `}>
               test
             </Paper>
           </Grid>
