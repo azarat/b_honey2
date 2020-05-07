@@ -10,7 +10,7 @@ import Grid from '@material-ui/core/Grid';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
-import { fade, createMuiTheme, ThemeProvider, makeStyles } from '@material-ui/core/styles';
+import { createMuiTheme, ThemeProvider, makeStyles } from '@material-ui/core/styles';
 import { purple } from '@material-ui/core/colors';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import styled from '@emotion/styled';
@@ -21,6 +21,13 @@ import IconButton from '@material-ui/core/IconButton';
 import InputBase from '@material-ui/core/InputBase';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
+import LocalShippingIcon from '@material-ui/icons/LocalShipping';
+import CreditCardIcon from '@material-ui/icons/CreditCard';
+import ScheduleIcon from '@material-ui/icons/Schedule';
+import Fade from 'react-reveal/Fade';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
 
 import LogoSrc from './logo_txt.png';
 
@@ -182,6 +189,26 @@ const Slider = props => {
   )
 }
 
+const Header = props => {
+  return (
+    <AppBar position="fixed" className="initial-scroll">
+      <div className={props.classes.headerBg} css={css`
+          opacity: ${props.opacityHeaderBg};
+        `}></div>
+      <Toolbar>
+        <Grid container direction="row" justify="center" alignItems="center">
+          <Grid item className={props.classes.paper} xs={2}>
+            <Logo />
+          </Grid>
+          <Grid item className={[props.classes.paper, "menu-section"].join(' ')} xs={10}>
+            <MainMenu />
+          </Grid>
+        </Grid>
+      </Toolbar>
+    </AppBar>
+  )
+}
+
 function HeaderContacts() {
   return (
     <div>+38 (068) 888 88 88</div>
@@ -204,6 +231,46 @@ function MainMenu() {
   );
 }
 
+const BlocksUnderSlider = () => {
+  return (
+    <Grid container className="blocks-under-slider">
+      <Grid item xs={4}>
+        <Fade left>
+          <ScheduleIcon />
+        </Fade>
+        <Fade right>
+          <div className="blocks-under-slider__item">
+            <span className="blocks-under-slider__item__top">Режим работы</span>
+            <span className="blocks-under-slider__item__bottom">Пн-пт: 9:00 - 17:00<br />Сб-вс: выходные</span>
+          </div>
+        </Fade>
+      </Grid>
+      <Grid item xs={4}>
+        <Fade left>
+          <CreditCardIcon />
+        </Fade>
+        <Fade right>
+          <div className="blocks-under-slider__item">
+            <span className="blocks-under-slider__item__top">Оплата</span>
+            <span className="blocks-under-slider__item__bottom">Картой Visa/Mastercard<br />Наложеный платеж</span>
+          </div>
+        </Fade>
+      </Grid>
+      <Grid item xs={4}>
+        <Fade left>
+          <LocalShippingIcon />
+        </Fade>
+        <Fade right>
+          <div className="blocks-under-slider__item">
+            <span className="blocks-under-slider__item__top">Доставка</span>
+            <span className="blocks-under-slider__item__bottom">По Украине<br />Новой Почтой</span>
+          </div>
+        </Fade>
+      </Grid>
+    </Grid>
+  )
+}
+
 function AppGrid() {
   const classes = useStyles();
 
@@ -215,6 +282,7 @@ function AppGrid() {
   const handlerMarginParallax = useCallback(
     ({e}) => {
 
+      var relativeOpacity;
       var relativeMargin;
       var relativeScroll = window.innerHeight - window.scrollY;
       var multiplier = 2;
@@ -229,8 +297,14 @@ function AppGrid() {
         relativeMargin = 1;
       }
 
+      relativeOpacity = 1 * relativeMargin;
+      if (relativeOpacity >= 1) {
+        relativeOpacity = 1;
+      }
+
+
       setMarginParallax(initialMargin * (1 + relativeMargin));
-      setOpacityHeaderBg(relativeMargin);
+      setOpacityHeaderBg(relativeOpacity);
 
     },
     [marginParallax, opacityHeaderBg]
@@ -239,25 +313,74 @@ function AppGrid() {
   useEventListener('scroll', handlerMarginParallax)
   // -------------------------
 
+  const categories = [
+    {
+      title: 'Натуральный мед',
+      description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+        eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+        enim ad minim veniam, quis nostrud exercitation ullamco laboris
+        nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+        reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+        pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa
+        qui officia deserunt mollit anim id est laborum.`
+    },
+    {
+      title: 'Медовая паста',
+      description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+        eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+        enim ad minim veniam, quis nostrud exercitation ullamco laboris
+        nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+        reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+        pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa
+        qui officia deserunt mollit anim id est laborum.`
+    },
+    {
+      title: 'Мед со специями',
+      description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+        eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+        enim ad minim veniam, quis nostrud exercitation ullamco laboris
+        nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+        reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+        pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa
+        qui officia deserunt mollit anim id est laborum.`
+    },
+    {
+      title: 'Пчелиные полезности',
+      description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+        eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+        enim ad minim veniam, quis nostrud exercitation ullamco laboris
+        nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+        reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+        pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa
+        qui officia deserunt mollit anim id est laborum.`
+    },
+    {
+      title: 'Медовые соты',
+      description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+        eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+        enim ad minim veniam, quis nostrud exercitation ullamco laboris
+        nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+        reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+        pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa
+        qui officia deserunt mollit anim id est laborum.`
+    },
+    {
+      title: 'Сувениры',
+      description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+        eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+        enim ad minim veniam, quis nostrud exercitation ullamco laboris
+        nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+        reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+        pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa
+        qui officia deserunt mollit anim id est laborum.`
+    },
+  ];
+
   return (
     <ThemeProvider theme={theme}>
       <div className={classes.root}>
 
-        <AppBar position="fixed" className="initial-scroll">
-          <div className={classes.headerBg} css={css`
-              opacity: ${opacityHeaderBg};
-            `}></div>
-          <Toolbar>
-            <Grid container direction="row" justify="center" alignItems="center">
-              <Grid item className={classes.paper} xs={3}>
-                <Logo />
-              </Grid>
-              <Grid item className={[classes.paper, "menu-section"].join(' ')} xs={9}>
-                <MainMenu />
-              </Grid>
-            </Grid>
-          </Toolbar>
-        </AppBar>
+        <Header opacityHeaderBg={opacityHeaderBg} classes={classes} />
 
         <Slider slides={images} />
 
@@ -267,7 +390,32 @@ function AppGrid() {
               css={css`
                 margin-top: -${marginParallax}px;
               `}>
-              test
+
+              <BlocksUnderSlider />
+
+
+              {categories.map((category, index) => { return (
+              <Paper className="categories-hompage" elevation={5}>
+                <Grid container>
+                    <Grid key={index} item xs={6} className="categories-hompage__category">
+                      <Card elevation={0} square>
+                        <CardContent className="categories-hompage__category__info">
+                          <Typography component="h2" variant="h5">
+                            <Fade left cascade>
+                              {category.title}
+                            </Fade>
+                          </Typography>
+                          <Typography variant="body2">
+                            {category.description}
+                          </Typography>
+                        </CardContent>
+                      </Card>
+                    </Grid>
+                </Grid>
+              </Paper>
+            )})}
+
+
             </Paper>
           </Grid>
         </Grid>
