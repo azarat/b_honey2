@@ -13,7 +13,7 @@
     "extract-text-webpack-plugin": "^3.0.2",
     "gulp": "^4.0.2",
     "gulp-cli": "^2.2.0",
-    "node-notifier": "^7.0.0",
+    "node-notifier": "^8.0.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-reveal": "^1.2.2",
